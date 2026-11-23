@@ -1,0 +1,21 @@
+# Jenkins để học trên máy cá nhân, không dùng cho server thật.
+name: manager-life-jenkins
+
+services:
+  jenkins:
+    build: .
+    user: root # để dùng được docker.sock
+    ports:
+      - "127.0.0.1:8080:8080" # chỉ máy này vào được
+    environment:
+      # Cho phép lấy code từ repo trên ổ đĩa (file:///repo).
+      JAVA_OPTS: -Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true
+    volumes:
+      - jenkins-home:/var/jenkins_home # dữ liệu của Jenkins
+      - /var/run/docker.sock:/var/run/docker.sock # cho Jenkins điều khiển Docker của máy
+      - ..:/repo:ro # thư mục dự án
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # để gọi được API đã deploy
+
+volumes:
+  jenkins-home:
