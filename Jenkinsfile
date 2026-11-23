@@ -2,8 +2,10 @@ pipeline {
     agent any
 
     triggers {
-        // Khoảng 2 phút hỏi git một lần, có commit mới thì tự build.
-        pollSCM('H/2 * * * *')
+        // GitHub gọi Jenkins ngay khi có push (cần webhook trỏ tới /github-webhook/).
+        githubPush()
+        // // Dự phòng: khoảng 2 phút hỏi git một lần, phòng khi GitHub không gọi tới được.
+        // pollSCM('H/2 * * * *')
     }
 
     environment {
